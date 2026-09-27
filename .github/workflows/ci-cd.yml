@@ -51,3 +51,41 @@ jobs:
 
       - name: Check AWS identity
         run: aws sts get-caller-identity
+
+  build-and-push:
+    name: Build and Push Docker Image
+    needs: aws-auth
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AWS_REGION: eu-west-3
+      ECR_REPOSITORY: cofrisk
+      ECR_REGISTRY: 606636979223.dkr.ecr.eu-west-3.amazonaws.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t "$ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA" \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push \
+            "$ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA"
