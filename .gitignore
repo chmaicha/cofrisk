@@ -9,3 +9,5 @@ __pycache__/
 .ruff_cache/
 .aws/
 credentials
+
+.github\workflows\ci.yml
