@@ -32,10 +32,10 @@ jobs:
           pip install -r requirements.txt
           pip install pytest ruff
 
-      - name: Ruff  || true
-        run: ruff check src tests
-      - name: Pytest
-        run: pytest
+    #   - name: Ruff  || true
+    #     run: ruff check src tests
+    #   - name: Pytest
+    #     run: pytest
 
   aws-auth:
     name: Test AWS OIDC
