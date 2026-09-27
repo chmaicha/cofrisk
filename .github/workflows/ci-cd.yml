@@ -33,8 +33,7 @@ jobs:
           pip install pytest ruff
 
       - name: Ruff  || true
-        run: ruff check .
-
+        run: ruff check src tests
       - name: Pytest
         run: pytest
 
